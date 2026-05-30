@@ -1,0 +1,109 @@
+﻿using Microsoft.EntityFrameworkCore;
+
+using (var db = new AppDbContext())
+{
+    db.Database.EnsureCreated();
+
+    while (true)
+    {
+
+        Console.WriteLine("\n1. Criar Nova Sala");
+        Console.WriteLine("2. Mostrar Salas");
+        Console.WriteLine("3. Reservar Horário");
+        Console.WriteLine("4. Ver Reuniões dos ultimos 7 dias");
+        Console.WriteLine("0. Sair");
+        Console.Write("\nOpção: ");
+
+        string entrada = Console.ReadLine();
+        if (!int.TryParse(entrada, out int opcao)) continue;
+
+        if (opcao == 1)
+        {
+            Console.Write("Nome da Sala: ");
+            string nome = Console.ReadLine();
+
+            Console.Write("Andar: ");
+            int andar = int.Parse(Console.ReadLine());
+            
+            Console.Write("Assentos: ");
+            int assentos = int.Parse(Console.ReadLine());
+
+            db.Salas.Add(new Sala 
+            { 
+                Nome = nome, 
+                Andar = andar, 
+                QuantidadeAssentos = assentos 
+            });
+            db.SaveChanges();
+            Console.WriteLine("Sala criada com sucesso!");
+
+            Console.ReadKey();
+            Console.Clear();
+        }
+        else if (opcao == 2)
+        {
+            Console.Write("Filtrar por nome (ou vazio): ");
+            string busca = Console.ReadLine();
+
+            var query = db.Salas.AsQueryable();
+            if (!string.IsNullOrEmpty(busca)) 
+                query = query.Where(s => s.Nome.Contains(busca));
+
+            var salas = query.OrderBy(s => s.Andar).Take(10).ToList();
+
+            foreach (var s in salas)
+            {
+                var horasOcupadas = db.Reservas.Where(r => r.SalaId == s.Id && r.Inicio.Date == DateTime.Today).ToList().Sum(r => (r.Fim - r.Inicio).TotalHours);
+                double horasLivres = 11 - horasOcupadas;
+
+                Console.WriteLine("\n==============================================\n");
+                Console.WriteLine($"{s.Nome}\n{s.Andar}º Andar\nNumero de assentos: {s.QuantidadeAssentos}\nHoras Livres Hoje: {horasLivres}h");
+            }
+
+            Console.ReadKey();
+            Console.Clear();
+        }
+        else if (opcao == 3)
+        {
+            Console.Write("ID da Sala: ");
+            int id = int.Parse(Console.ReadLine());
+
+            Console.Write("Início (dd/mm/aaaa hh:mm): ");
+            DateTime inicio = DateTime.Parse(Console.ReadLine());
+
+            Console.Write("Fim (dd/mm/aaaa hh:mm): ");
+            DateTime fim = DateTime.Parse(Console.ReadLine());
+
+            if (inicio.Hour < 8 || fim.Hour > 19 || (fim.Hour == 19 && fim.Minute > 0))
+            {
+                Console.WriteLine("Erro: Por favor, Escolha reservas apenas entre 08:00 e 19:00.");
+            }
+            else if (db.Reservas.Any(r => r.SalaId == id && inicio < r.Fim && fim > r.Inicio))
+            {
+                Console.WriteLine("Erro: Horário indisponível para esta sala.");
+            }
+            else
+            {
+                db.Reservas.Add(new Reserva { SalaId = id, Inicio = inicio, Fim = fim });
+                db.SaveChanges();
+                Console.WriteLine("Reserva realizada!");
+            }
+        
+            Console.ReadKey();
+            Console.Clear();
+        }
+        else if (opcao == 4)
+        {
+            var seteDiasAtras = DateTime.Now.AddDays(-7);
+            int total = db.Reservas.Count(r => r.Inicio >= seteDiasAtras);
+            Console.WriteLine($"Total de reuniões nos últimos 7 dias: {total}");
+        }
+        else if (opcao == 0)
+        {
+            break;
+        }
+        
+            Console.ReadKey();
+            Console.Clear();
+    }
+}
