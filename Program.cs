@@ -11,7 +11,8 @@ using (var db = new AppDbContext())
         Console.WriteLine("2.\tMostrar Salas");
         Console.WriteLine("3.\tReservar Horário");
         Console.WriteLine("4.\tVer Reuniões dos ultimos 7 dias");
-        Console.WriteLine("5.\tExcluir Sala");
+        Console.WriteLine("5.\tAtualizar/Modificar Sala");
+        Console.WriteLine("6.\tExcluir Sala");
         Console.WriteLine("0. Sair");
         Console.Write("\nOpção: ");
 
@@ -41,6 +42,7 @@ using (var db = new AppDbContext())
             Console.ReadKey();
             Console.Clear();
         }
+
         else if (opcao == 2)
         {
             Console.Write("Filtrar por nome (ou vazio): ");
@@ -64,6 +66,7 @@ using (var db = new AppDbContext())
             Console.ReadKey();
             Console.Clear();
         }
+
         else if (opcao == 3)
         {
             Console.Write("ID da Sala: ");
@@ -93,12 +96,45 @@ using (var db = new AppDbContext())
             Console.ReadKey();
             Console.Clear();
         }
+
         else if (opcao == 4)
         {
             var seteDiasAtras = DateTime.Now.AddDays(-7);
             int total = db.Reservas.Count(r => r.Inicio >= seteDiasAtras);
             Console.WriteLine($"Total de reuniões nos últimos 7 dias: {total}");
         }
+
+        else if (opcao == 5)
+        {
+            
+        }
+        
+        else if (opcao == 6)
+        {   
+            Console.WriteLine("\n---EXCLUIR---\n");
+            Console.Write("ID da Sala: ");
+            int id = int.Parse(Console.ReadLine());
+
+            var sala = db.Salas.Find(id);
+
+            if (sala == null)
+            {
+                Console.WriteLine("Sala não encontrada!");
+            }
+            else
+            {
+                Console.WriteLine($"Tem certeza que deseja excluir a '{sala.Nome}'? (S/N)");
+                if (Console.ReadLine().ToUpper() == "S")
+                {
+                    db.Salas.Remove(sala);
+                    db.SaveChanges();
+
+                    Console.WriteLine($"A {sala.Nome} excluída com sucesso!");
+                    Console.ReadKey();
+                }
+            }
+        }
+
         else if (opcao == 0)
         {
             break;
