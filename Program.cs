@@ -106,7 +106,36 @@ using (var db = new AppDbContext())
 
         else if (opcao == 5)
         {
-            
+            Console.WriteLine("---MODIFICAR OU ATULIZAR--- ");
+            Console.Write("ID da Sala: ");
+            int id = int.Parse(Console.ReadLine());
+
+            var sala = db.Salas.Find(id);
+
+            if (sala == null)
+            {
+                Console.WriteLine("Sala não encontrada!");
+            }
+            else
+            {
+                Console.WriteLine($"Editando: {sala.Nome} (Andar {sala.Andar})");
+                
+                Console.Write("Novo Nome (ou Enter para manter): ");
+                string novoNome = Console.ReadLine();
+                sala.Nome = novoNome;
+
+                Console.Write("Novo Andar: ");
+                sala.Andar = int.Parse(Console.ReadLine());
+
+                Console.Write("Nova Quantidade de Assentos: ");
+                sala.QuantidadeAssentos = int.Parse(Console.ReadLine());
+
+                Console.WriteLine("\n\tSalvando Alteirações...");
+
+                db.SaveChanges();
+                Console.WriteLine("\nSala atualizada com sucesso!");
+                Console.ReadKey();
+            }
         }
         
         else if (opcao == 6)
