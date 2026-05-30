@@ -35,6 +35,24 @@ using System.Data.Common;
 
             Console.WriteLine("Sala Cadastrada")
         }
+        else if (opcao == 2)
+        {
+            var salas = db.Salas.OrderBy(s => s.Andar).Take(10).ToList();
+
+            foreach (var s in salas)
+            {
+                Console.WriteLine($"ID: {s.Id} | Numero: {s.Numero} | Andar: {s.Andar} | Assentos: {s.QuantidadeAssentos}");
+
+            }
+        }
+        else if (opcao == 3)
+        {
+            
+        }
+        else if (opcao == 0)
+        {
+            break;
+        }
     }
 }
 
