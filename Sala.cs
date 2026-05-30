@@ -1,8 +1,9 @@
 public class Sala
 {
-    public int Numero { get; set; }
+    public int Id {get; set;}
+    public int Numero {get; set;}
 
-    public int QuantidadeAssentos { get; set; }
+    public int QuantidadeAssentos {get; set;}
 
     private List<Reserva> ListaAgendamentos;
 

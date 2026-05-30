@@ -1,6 +1,9 @@
 public class Reserva
 {
-    public DateTime Inicio { get; set; }
+    public int Id {get; set;}
+    public int SalaId {get; set;}
+    public Sala Sala {get; set;}
+    public DateTime Inicio {get; set;}
 
-    public DateTime Fim { get; set; }
+    public DateTime Fim {get; set;}
 }
