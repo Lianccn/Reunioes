@@ -7,10 +7,11 @@ using (var db = new AppDbContext())
     while (true)
     {
 
-        Console.WriteLine("\n1. Criar Nova Sala");
-        Console.WriteLine("2. Mostrar Salas");
-        Console.WriteLine("3. Reservar Horário");
-        Console.WriteLine("4. Ver Reuniões dos ultimos 7 dias");
+        Console.WriteLine("\n1.\tCriar Nova Sala");
+        Console.WriteLine("2.\tMostrar Salas");
+        Console.WriteLine("3.\tReservar Horário");
+        Console.WriteLine("4.\tVer Reuniões dos ultimos 7 dias");
+        Console.WriteLine("5.\tExcluir Sala");
         Console.WriteLine("0. Sair");
         Console.Write("\nOpção: ");
 
@@ -57,7 +58,7 @@ using (var db = new AppDbContext())
                 double horasLivres = 11 - horasOcupadas;
 
                 Console.WriteLine("\n==============================================\n");
-                Console.WriteLine($"{s.Nome}\n{s.Andar}º Andar\nNumero de assentos: {s.QuantidadeAssentos}\nHoras Livres Hoje: {horasLivres}h");
+                Console.WriteLine($"ID: {s.Id}\n{s.Nome}\n{s.Andar}º Andar\nNumero de assentos: {s.QuantidadeAssentos}\nHoras Livres Hoje: {horasLivres}h");
             }
 
             Console.ReadKey();
