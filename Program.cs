@@ -13,8 +13,8 @@ using (var db = new AppDbContext())
         Console.WriteLine("4.\tVer Reuniões dos ultimos 7 dias");
         Console.WriteLine("5.\tAtualizar/Modificar Sala");
         Console.WriteLine("6.\tExcluir Sala");
-        Console.WriteLine("0. Sair");
-        Console.Write("\nOpção: ");
+        Console.WriteLine("0.\tSair");
+        Console.WriteLine("\nOpção: ");
 
         string entrada = Console.ReadLine();
         if (!int.TryParse(entrada, out int opcao)) continue;
@@ -38,6 +38,7 @@ using (var db = new AppDbContext())
             });
             db.SaveChanges();
             Console.WriteLine("Sala criada com sucesso!");
+            Console.WriteLine("Para consultar o ID das salas, escolha a opção 2 no menu.");
 
             Console.ReadKey();
             Console.Clear();
@@ -102,6 +103,9 @@ using (var db = new AppDbContext())
             var seteDiasAtras = DateTime.Now.AddDays(-7);
             int total = db.Reservas.Count(r => r.Inicio >= seteDiasAtras);
             Console.WriteLine($"Total de reuniões nos últimos 7 dias: {total}");
+
+            Console.ReadKey();
+            Console.Clear();
         }
 
         else if (opcao == 5)
@@ -134,8 +138,10 @@ using (var db = new AppDbContext())
 
                 db.SaveChanges();
                 Console.WriteLine("\nSala atualizada com sucesso!");
-                Console.ReadKey();
             }
+
+            Console.ReadKey();
+            Console.Clear();
         }
         
         else if (opcao == 6)
@@ -162,6 +168,9 @@ using (var db = new AppDbContext())
                     Console.ReadKey();
                 }
             }
+
+            Console.ReadKey();
+            Console.Clear();
         }
 
         else if (opcao == 0)
