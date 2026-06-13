@@ -1,9 +1,21 @@
+using System.ComponentModel.DataAnnotations;
+
 public class Sala
 {
     public int Id { get; set; }
+
+    [Required(ErrorMessage = "O nome da sala é obrigatório")]
+    [StringLength(100, MinimumLength = 3, ErrorMessage = "O nome deve ter entre 3 e 100 caracteres")]
     public string Nome { get; set; }
+
+    [Required(ErrorMessage = "O andar é obrigatório")]
+    [Range(1, 100, ErrorMessage = "O andar deve ser entre 1 e 100")]
     public int Andar { get; set; }
+
+    [Required(ErrorMessage = "A quantidade de assentos é obrigatória")]
+    [Range(1, 500, ErrorMessage = "A quantidade de assentos deve ser entre 1 e 500")]
     public int QuantidadeAssentos { get; set; }
+
     public List<Reserva> ListaAgendamentos { get; set; } = new List<Reserva>();
 
     public Sala() { }

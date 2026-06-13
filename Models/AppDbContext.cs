@@ -1,4 +1,5 @@
 using Microsoft.EntityFrameworkCore;
+using System.ComponentModel.DataAnnotations;
 
 public class AppDbContext : DbContext
 {
@@ -7,10 +8,27 @@ public class AppDbContext : DbContext
 
     protected override void OnConfiguring(DbContextOptionsBuilder options) => options.UseSqlite("Data Source=reunioes.db");
 
-    public void CriarSala(string nome, int andar, int quantidadeAssentos)
+    private string ValidarEntidade(object entidade)
     {
-        Salas.Add(new Sala(nome, andar, quantidadeAssentos));
+        var contexto = new ValidationContext(entidade);
+        var resultados = new List<ValidationResult>();
+        bool valido = Validator.TryValidateObject(entidade, contexto, resultados, true);
+
+        if (!valido)
+            return string.Join("\n", resultados.Select(r => r.ErrorMessage));
+
+        return null;
+    }
+
+    public string CriarSala(string nome, int andar, int quantidadeAssentos)
+    {
+        var sala = new Sala(nome, andar, quantidadeAssentos);
+        string erro = ValidarEntidade(sala);
+        if (erro != null) return erro;
+
+        Salas.Add(sala);
         SaveChanges();
+        return null;
     }
 
     public List<Sala> BuscarSalas(string busca)
@@ -34,13 +52,17 @@ public class AppDbContext : DbContext
 
     public string RealizarReserva(int salaId, DateTime inicio, DateTime fim)
     {
+        var reserva = new Reserva(salaId, inicio, fim);
+        string erro = ValidarEntidade(reserva);
+        if (erro != null) return erro;
+
         if (inicio.Hour < 8 || fim.Hour > 19 || (fim.Hour == 19 && fim.Minute > 0))
             return "Erro: Por favor, Escolha reservas apenas entre 08:00 e 19:00.";
 
         if (Reservas.HorarioIndisponivel(salaId, inicio, fim))
             return "Erro: Horário indisponível para esta sala.";
 
-        Reservas.Add(new Reserva(salaId, inicio, fim));
+        Reservas.Add(reserva);
         SaveChanges();
         return "Reserva realizada!";
     }
@@ -50,13 +72,18 @@ public class AppDbContext : DbContext
         return Reservas.TotalReunioesUltimosDias(dias);
     }
 
-    public void AtualizarSala(int id, string novoNome, int novoAndar, int novosAssentos)
+    public string AtualizarSala(int id, string novoNome, int novoAndar, int novosAssentos)
     {
         var sala = Salas.Find(id);
-        if (sala == null) return;
+        if (sala == null) return "Sala não encontrada!";
+
+        var salaTemp = new Sala(novoNome, novoAndar, novosAssentos);
+        string erro = ValidarEntidade(salaTemp);
+        if (erro != null) return erro;
 
         sala.Atualizar(novoNome, novoAndar, novosAssentos);
         SaveChanges();
+        return null;
     }
 
     public void ExcluirSala(int id)

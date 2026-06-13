@@ -1,9 +1,18 @@
+using System.ComponentModel.DataAnnotations;
+
 public class Reserva
 {
     public int Id { get; set; }
+
+    [Required(ErrorMessage = "A sala de reunião é obrigatória")]
     public int SalaId { get; set; }
+
     public Sala Sala { get; set; }
+
+    [Required(ErrorMessage = "O início da reserva é obrigatório")]
     public DateTime Inicio { get; set; }
+
+    [Required(ErrorMessage = "O fim da reserva é obrigatório")]
     public DateTime Fim { get; set; }
 
     public Reserva() { }
