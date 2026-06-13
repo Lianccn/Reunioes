@@ -11,12 +11,12 @@ using (var db = new AppDbContext())
         Console.WriteLine("3.\tReservar Horário");
         Console.WriteLine("4.\tVer Reuniões dos ultimos 7 dias");
         Console.WriteLine("5.\tAtualizar/Modificar Sala");
-        Console.WriteLine("6.\tExcluir Sala");
+        Console.WriteLine("6.\tExcluir Sala\n");
 
         Console.WriteLine("7.\tMostrar Reservas");
         Console.WriteLine("8.\tReagendar Reserva");
         Console.WriteLine("9.\tCancelar Reserva");
-        
+
         Console.WriteLine("0.\tSair");
         Console.WriteLine("\nOpção: ");
 
